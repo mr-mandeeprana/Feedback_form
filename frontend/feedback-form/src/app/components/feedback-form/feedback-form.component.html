@@ -1,0 +1,571 @@
+<form #form="ngForm" (ngSubmit)="onSubmit()" 
+(keydown.enter)="preventEnterSubmit($event)">
+<div class="background-container">
+<div *ngIf="!this.isSubmitted">
+<div class="logo-container">
+  <img [src] ="'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABkAAAAGQCAYAAAD2lawGAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEvGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTA3LTE2PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjYxOTU4ODJhLTFlNzMtNDliOC1iY2MxLTM2MGNkZmM2YTgxODwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlv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'" alt="Company Logo" class="logo"/>
+</div>
+<h1 class="section-title">BEUMER DIGITALIZATION</h1>
+<h1 class="section-title">CUSTOMER FEEDBACK FORM</h1>
+  <!-- Section A -->
+  <div *ngIf="currentSection === 0" class="section-card " #sectionCard>
+    <h2>Section A: Company / Plant Details</h2>
+
+    <label class="required">Country:</label>
+    <select name="country" [(ngModel)]="formData.country" (change)="onCountryChange()" required>
+      <option value="" disabled selected>Select Country</option>
+      <option *ngFor="let c of Object.keys(countriesWithCompanies)" [value]="c">{{ c }}</option>
+    </select>
+
+     <mat-form-field appearance="outline" class="full-width">
+  <mat-label class="required">Company Name</mat-label >
+  <mat-select [(ngModel)]="formData.company" name="company" required [disabled]="!formData.country" (selectionChange)="onCompanyChange($event.value)">
+    <mat-option value="" disabled>Select Company</mat-option>
+    <mat-option *ngFor="let company of cementCompanies" [value]="company">
+      {{ company }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- Show input if 'Other' is selected -->
+<mat-form-field *ngIf="showOthercementcompany" appearance="outline" class="full-width">
+  <mat-label class="required">Enter your Cement Company</mat-label>
+  <input matInput [(ngModel)]="formData.othercementcompany" name="othercementcompany" required />
+</mat-form-field>
+
+<label class="required">Plant Location:</label>
+    <input type="text" name="plantlocation" [(ngModel)]="formData.plantlocation" required />
+  </div>
+
+  
+  <!-- Section B -->
+  <div *ngIf="currentSection === 1" class="section-card" #sectionCard>
+    <h2>Section B: General Information</h2>
+
+    <label class="required">Contact Person's Name:</label>
+    <input type="text" name="name" [(ngModel)]="formData.name" required pattern="^[a-zA-Z\s]*$"
+  (keypress)="blockNumbers($event)"
+  #nameInput="ngModel"/>
+
+     <mat-form-field appearance="outline" class="full-width">
+  <mat-label class="required">Designation</mat-label>
+  <mat-select [(ngModel)]="formData.designation" name="designation" required (selectionChange)="checkOtherDesignation()">
+    <mat-option *ngFor="let des of designations" [value]="des">
+      {{ des }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- Show 'Other' input if selected -->
+<div *ngIf="showOtherDesignation">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label class="required">Enter your Designation</mat-label>
+    <input matInput [(ngModel)]="otherDesignation" name="otherDesignation" required />
+  </mat-form-field>
+</div>
+
+    <label class="required">Contact Number:</label>
+    <input type="tel" name="number" [(ngModel)]="formData.number" required pattern="[0-9]{10}" maxlength="10" />
+
+    <label class="required">Email ID:</label>
+    <div class="otp-row">
+      <input type="email" name="email" [(ngModel)]="formData.email" required />
+      <button type="button" (click)="sendOtp()" [disabled]="otpSent">Send OTP</button>
+    </div>
+
+    <div *ngIf="otpSent" class="form-group">
+      <label class="required">Enter OTP:</label>
+      <div class="otp-row">
+        <input type="text" [(ngModel)]="enteredOtp" name="otp" maxlength="6" required
+               (input)="onOtpInputChange()" placeholder="Enter 6-character OTP" />
+        <button type="button" (click)="verifyOtp()" [disabled]="otpVerified || enteredOtp.length !== 6">
+          {{ otpVerified ? 'OTP Verified' : 'Verify OTP' }}</button>
+        <div *ngIf="otpCountdown > 0 && !otpVerified" class="countdown">⏱️ Expires in {{ getCountdownDisplay() }}</div>
+        <div *ngIf="otpVerified" class="success">✅ Email verified</div>
+      </div>
+    </div>
+
+    <div *ngIf="otpStatusMessage" [ngClass]="{
+      'otp-success': otpStatusType === 'success',
+      'otp-error': otpStatusType === 'error'}" class="otp-message">
+      {{ otpStatusMessage }}
+    </div>
+  </div>
+
+  <!-- Section C: Product Information -->
+<div *ngIf="currentSection === 2" class="section-card required">
+  <h2>Section C: Product Information</h2>
+
+  <label><strong>1. Product selected for Monitoring:</strong></label>
+  <div class="checkbox-row">
+    <label><input type="checkbox" value="Fill Pac" (change)="onProductToggle($event)" /> Fill Pac</label>
+    <label><input type="checkbox" value="Bucket Elevator" (change)="onProductToggle($event)" /> Bucket Elevator</label>
+  </div>
+
+  <!-- Fill Pac Section -->
+  <div *ngIf="formData.selectedProducts.includes('Fill Pac')">
+    <h3 class="Section">Fill Pac Details</h3>
+
+    <label class="required">How many Fill Pac units do you have? *</label>
+    <select
+      name="fillPacTotalCount"
+      [(ngModel)]="formData.fillPac.totalUnits"
+      (change)="onFillPacUnitCountChange()"
+      required
+    >
+      <option value="" disabled selected>Select</option>
+      <option *ngFor="let count of fillPacUnits" [value]="count">{{ count }}</option>
+    </select>
+
+    <label class="required">How many Fill Pac units have undergone OEE monitoring? *</label>
+    <select
+      name="fillPacMonitoredCount"
+      [(ngModel)]="formData.fillPac.monitoredUnits"
+      (change)="onFillPacMonitoringCountChange()"
+      required
+    >
+      <option value="" disabled selected>Select</option>
+      <option *ngFor="let count of fillPacMonitoredUnits" [value]="count">{{ count }}</option>
+    </select>
+
+    <!-- Dynamic Fill Pac Questions -->
+    <div *ngFor="let unit of monitoredFillPacArray; let i = index">
+<h4>{{ formData.fillPac.unitDetails[i].id }} - Product Information</h4>
+
+      <label class="required">How many spouts does it have?</label>
+        <select
+          [name]="'fillPacSpouts_' + i"
+          [(ngModel)]="formData.fillPac.unitDetails[i].spouts"
+          required
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <option value="" disabled selected>Select</option>
+          <option value="8">8</option>
+          <option value="12">12</option>
+          <option value="16">16</option>
+        </select>
+
+      <label class="required">Date of Product Installation:</label>
+      <input
+        type="date"
+        [name]="'fillpacinstallation_' + i"
+        [(ngModel)]="formData.fillPac.unitDetails[i].installationDate"
+        [max]="today"
+        required
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <label>1A. What all services are provided to you?</label>
+<div class="checkbox-row">
+  <label><input type="checkbox" [name]="'docs_' + i" value="eDoc"
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> eDoc</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="eLara"
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> Elara</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="BG Insight"
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> BG Insight</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="PartsPublisher"
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> Parts Publisher</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="BG Predict "
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> BG Predict</label>
+    
+    <label><input type="checkbox" [name]="'docs_' + i" value="Hotline"
+    (change)="onDocCheckboxChange($event, formData.fillPac.unitDetails[i].documents)" /> Hotline</label>
+</div>
+    </div>
+  </div>
+
+  <!-- Bucket Elevator Section -->
+  <div *ngIf="formData.selectedProducts.includes('Bucket Elevator')">
+    <h3 class="Section">Bucket Elevator Details</h3>
+
+    <label class="required">How many Bucket Elevator units do you have? *</label>
+    <select
+      name="bucketElevatorTotalCount"
+      [(ngModel)]="formData.bucketElevator.totalUnits"
+      (change)="onBucketElevatorUnitCountChange()"
+      required
+    >
+      <option value="" disabled selected>Select</option>
+      <option *ngFor="let count of bucketElevatorUnits" [value]="count">{{ count }}</option>
+    </select>
+
+    <label class="required">How many Bucket Elevator units have undergone condition monitoring? *</label>
+    <select
+      name="bucketElevatorMonitoredCount"
+      [(ngModel)]="formData.bucketElevator.monitoredUnits"
+      (change)="onBucketElevatorMonitoringCountChange()"
+      required
+    >
+      <option value="" disabled selected>Select</option>
+      <option *ngFor="let count of bucketElevatorMonitoredUnits" [value]="count">{{ count }}</option>
+    </select>
+
+    <!-- Dynamic Bucket Elevator Questions -->
+    <div *ngFor="let unit of monitoredBucketElevatorArray; let i = index">
+<h4>{{ formData.bucketElevator.unitDetails[i].id }} - Product Information</h4>
+
+      <label class="required">What is the type of the elevator?</label>
+        <input
+          type="text"
+          [name]="'bucketElevatorType_' + i"
+          [(ngModel)]="formData.bucketElevator.unitDetails[i].elevatorType"
+          required
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <small>Example: Cement Silo, Clinker Transfer, etc.</small>
+
+      <label class="required">Date of Product Installation:</label>
+      <input
+        type="date"
+        [name]="'bucketInstallation_' + i"
+        [(ngModel)]="formData.bucketElevator.unitDetails[i].installationDate"
+        [max]="today"
+        required
+        [ngModelOptions]="{ standalone: true }"
+      />
+
+      <label class="required">1B. Is the elevator working efficiently?</label>
+      <input
+        type="text"
+        [name]="'bucketWorking_' + i"
+        [(ngModel)]="formData.bucketElevator.unitDetails[i].functionFeedback"
+        required
+        [ngModelOptions]="{ standalone: true }"
+      />
+
+      <label class="required">2B. Any belt slippage issues?</label>
+      <input
+        type="text"
+        [name]="'bucketSlippage_' + i"
+        [(ngModel)]="formData.bucketElevator.unitDetails[i].beltSlippage"
+        required
+        [ngModelOptions]="{ standalone: true }"
+      />
+
+      <label class="required">3B. Are maintenance costs acceptable?</label>
+      <input
+        type="text"
+        [name]="'bucketMaintenance_' + i"
+        [(ngModel)]="formData.bucketElevator.unitDetails[i].maintenanceFeedback"
+        required
+        [ngModelOptions]="{ standalone: true }"
+      />
+
+            <label>4B. What all documents are provided to you?</label>
+<div class="checkbox-row">
+  <label><input type="checkbox" [name]="'docs_' + i" value="eDoc" (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> eDoc</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="eLara" (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> Elara</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="BG Insight" (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> BG Insight</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="PartsPublisher" (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> Parts Publisher</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="BG Predict " (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> BG Predict</label>
+
+  <label><input type="checkbox" [name]="'docs_' + i" value="Hotline" (change)="onDocCheckboxChange($event, formData.bucketElevator.unitDetails[i].documents)" /> Hotline</label>
+</div>
+
+      <label>5B. Suggestions to improve Bucket Elevator performance?</label>
+      <textarea
+        [name]="'bucketSuggestions_' + i"
+        [(ngModel)]="formData.bucketElevator.unitDetails[i].suggestions"
+        [ngModelOptions]="{ standalone: true }"
+      ></textarea>
+    </div>
+  </div>
+</div>
+
+
+   <!-- SECTION D START -->
+<div *ngIf="currentSection === 3" class="section-card" #sectionCard>
+  <!-- Fill Pac Feedback Section -->
+  <div *ngIf="formData.selectedProducts.includes('Fill Pac')">
+    <h2>Section D: FillPac – OEE Dashboard Feedback</h2>
+
+    <!-- 1. Is OEE Data Accurate -->
+    <div>
+      <label class="required">1. Is the data shown in the dashboard accurate for the OEE?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.oeeDataAccurate" name="oeeDataAccurate" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.oeeDataAccurate === 'No'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please describe the inaccuracy</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.oeeInaccuracyDetails" name="oeeInaccuracyDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 2. Is Performance Accurate -->
+    <div>
+      <label class="required">2. Is the data shown in the dashboard accurate for Performance?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.performanceAccurate" name="performanceAccurate" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.performanceAccurate === 'No'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please describe the inaccuracy</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.performanceInaccuracyDetails" name="performanceInaccuracyDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 3. Is Quality Accurate -->
+    <div>
+      <label class="required">3. Is the data shown in the dashboard accurate for Quality?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.qualityAccurate" name="qualityAccurate" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.qualityAccurate === 'No'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please describe the inaccuracy</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.qualityInaccuracyDetails" name="qualityInaccuracyDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 4. Is Availability Accurate -->
+    <div>
+      <label class="required">4. Is the data shown in the dashboard accurate for Availability?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.availabilityAccurate" name="availabilityAccurate" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.availabilityAccurate === 'No'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please describe the inaccuracy</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.availabilityInaccuracyDetails" name="availabilityInaccuracyDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 5. Does Bag Count Match -->
+    <div>
+      <label class="required">5. Does the total count of bags produced match with the dashboard value?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.bagCountMatch" name="bagCountMatch" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.bagCountMatch === 'No'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please explain the mismatch</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.bagCountMismatchDetails" name="bagCountMismatchDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 6. Data Update Frequency -->
+    <div>
+      <label class="required">6. Is the data updated frequently enough to support your operations?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.dataUpdate" name="dataUpdate" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+        <mat-radio-button value="Not sure">Not sure</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 7. Bottleneck Identification -->
+    <div>
+      <label class="required">7. Does the dashboard help you identify and act on bottlenecks in the FillPac process?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.bottleneckHelp" name="bottleneckHelp" required>
+        <mat-radio-button value="Always">Always</mat-radio-button>
+        <mat-radio-button value="Sometimes">Sometimes</mat-radio-button>
+        <mat-radio-button value="Rarely">Rarely</mat-radio-button>
+        <mat-radio-button value="Never">Never</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 8. Most Useful Metric -->
+    <div>
+      <label class="required">8. Which metric do you find most useful for improving FillPac efficiency?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.usefulMetric" name="usefulMetric" required>
+        <mat-radio-button value="Availability">Availability</mat-radio-button>
+        <mat-radio-button value="Performance">Performance</mat-radio-button>
+        <mat-radio-button value="Quality">Quality</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 9. Missing Features -->
+    <div>
+      <label class="required">9. Are any key features missing in the dashboard?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.missingFeatures" name="missingFeatures" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="formData.fillPac.missingFeatures === 'Yes'">
+        <mat-form-field appearance="fill">
+          <mat-label>Please specify</mat-label>
+          <textarea matInput [(ngModel)]="formData.fillPac.missingFeatureDetails" name="missingFeatureDetails"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 10. Additional Visualizations -->
+    <div>
+      <label>10. What additional visualizations or reports would help you better understand FillPac performance?</label>
+      <textarea rows="3" [(ngModel)]="formData.fillPac.additionalVisualizations" name="additionalVisualizations"></textarea>
+    </div>
+
+    <!-- 11. Alerts Received -->
+    <div>
+      <label class="required">11. Do you receive alerts or notifications when OEE drops below target levels?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.alerts" name="alerts" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+        <mat-radio-button value="Not required">Not required</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 12. Fault/Idle Time -->
+    <div>
+      <label class="required">12. The fault and idle time information provided helps reduce downtime.</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.faultIdleTimeHelpful" name="faultIdleTimeHelpful" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 13. Bag Info Usefulness -->
+    <div>
+      <label class="required">13. The bag information provided helps reduce busted bags and improve the packer quality.</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.bagInfoHelpful" name="bagInfoHelpful" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="No">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- 14. General Comments -->
+    <div>
+      <label>14. Any other comments or improvement suggestions?</label>
+      <textarea rows="3" [(ngModel)]="formData.fillPac.additionalComments" name="additionalComments"></textarea>
+    </div>
+
+    <!-- 15. Dashboard User-Friendliness -->
+    <div>
+      <label class="required">15. Is the dashboard user-friendly and easy to navigate?</label>
+      <mat-radio-group [(ngModel)]="formData.fillPac.userFriendly" name="userFriendly" required>
+        <mat-radio-button value="Very easy">Very easy</mat-radio-button>
+        <mat-radio-button value="Somewhat easy">Somewhat easy</mat-radio-button>
+        <mat-radio-button value="Neutral">Neutral</mat-radio-button>
+        <mat-radio-button value="Difficult">Difficult</mat-radio-button>
+        <mat-radio-button value="Very difficult">Very difficult</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+
+  <!-- Bucket Elevator Feedback Section -->
+  <div *ngIf="formData.selectedProducts.includes('Bucket Elevator')">
+    <h2>Section D: Bucket Elevator - Condition Monitoring Dashboard Feedback</h2>
+
+    <!-- Q1 -->
+    <div>
+      <label class="required">1. How would you rate your understanding of the condition monitoring system implemented?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.implementationUnderstanding" name="implementationUnderstanding" required>
+        <mat-radio-button value="Excellent">Excellent</mat-radio-button>
+        <mat-radio-button value="Good">Good</mat-radio-button>
+        <mat-radio-button value="Average">Average</mat-radio-button>
+        <mat-radio-button value="Poor">Poor</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q2 -->
+    <div>
+      <label class="required">2. How effective has condition monitoring been in identifying issues before failure?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.failureIdentification" name="failureIdentification" required>
+        <mat-radio-button value="Effective">Effective</mat-radio-button>
+        <mat-radio-button value="Not Effective">Not Effective</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q3 -->
+    <div>
+      <label class="required">3. How satisfied are you with the training provided for using the condition monitoring tools?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.training" name="training" required>
+        <mat-radio-button value="Very Satisfied">Very Satisfied</mat-radio-button>
+        <mat-radio-button value="Satisfied">Satisfied</mat-radio-button>
+        <mat-radio-button value="Neutral">Neutral</mat-radio-button>
+        <mat-radio-button value="Dissatisfied">Dissatisfied</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q4 -->
+    <div>
+      <label class="required">4. How user-friendly is the condition monitoring dashboard/system?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.dashboardUsability" name="dashboardUsability" required>
+        <mat-radio-button value="Very Easy">Very Easy</mat-radio-button>
+        <mat-radio-button value="Moderate">Moderate</mat-radio-button>
+        <mat-radio-button value="Difficult">Difficult</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q5 -->
+    <div>
+      <label class="required">5. How often do you use the condition monitoring system to check equipment health?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.maintenanceImpact" name="maintenanceImpact" required>
+        <mat-radio-button value="Daily">Daily</mat-radio-button>
+        <mat-radio-button value="Weekly">Weekly</mat-radio-button>
+        <mat-radio-button value="Monthly">Monthly</mat-radio-button>
+        <mat-radio-button value="Rarely">Rarely</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q6 -->
+    <div>
+      <label class="required">6. Do you think the implementation of condition monitoring has reduced breakdowns?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.downtimeReduction" name="downtimeReduction" required>
+        <mat-radio-button value="Yes">Yes</mat-radio-button>
+        <mat-radio-button value="Somewhat">Somewhat</mat-radio-button>
+        <mat-radio-button value="Not Yet">Not Yet</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q7 -->
+    <div>
+      <label class="required">7. How would you rate the post-installation support and service related to condition monitoring?</label>
+      <mat-radio-group [(ngModel)]="formData.bucketElevator.feedback.supportExperience" name="supportExperience" required>
+        <mat-radio-button value="Excellent">Excellent</mat-radio-button>
+        <mat-radio-button value="Good">Good</mat-radio-button>
+        <mat-radio-button value="Average">Average</mat-radio-button>
+        <mat-radio-button value="Poor">Poor</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Q8 -->
+    <div>
+      <label>8. Suggestions for Improvement</label>
+      <textarea rows="3" [(ngModel)]="formData.bucketElevator.feedback.suggestions" name="suggestions"></textarea>
+    </div>
+  </div>
+</div>
+<!-- SECTION D END -->
+
+
+
+
+    <!-- Navigation Buttons -->
+    <div class="button-group">
+      <button type="button" (click)="goToPrevious()" [disabled]="currentSection === 0">Previous</button>
+      <button type="button" *ngIf="currentSection < maxSections - 1" (click)="goToNext()">Next</button>
+      <button type="submit" *ngIf="currentSection === maxSections - 1" [disabled]="form.invalid">Submit</button>
+    </div>
+    </div>
+
+<!-- THANK YOU SECTION -->
+  <div *ngIf="this.isSubmitted" class="thankyou-section">
+  <h2>🎉 Thank you for your response!</h2>
+  <p>Your feedback has been recorded successfully.</p>
+  <button mat-raised-button color="primary" (click)="submitAnotherResponse()">
+    Submit Another Response
+  </button>
+</div>
+</div>
+</form>
+
