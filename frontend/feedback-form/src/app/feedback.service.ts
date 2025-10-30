@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
-  private apiUrl = 'http://localhost:5000/api/feedback';
+  private apiUrl = environment.apiUrl + '/feedback';
   private socket: Socket;
 
   constructor(private http: HttpClient) {
-    this.socket = io('http://localhost:5000');
+    this.socket = io(environment.socketUrl);
   }
 
   submitFeedback(data: any): Observable<any> {
@@ -18,12 +19,12 @@ export class FeedbackService {
 
   // ✅ New method: request OTP
   requestOtp(email: string): Observable<any> {
-    return this.http.post(`http://localhost:5000/api/otp/request`, { email });
+    return this.http.post(environment.apiUrl + '/otp/request', { email });
   }
 
   // ✅ New method: verify OTP
   verifyOtp(email: string, otp: string): Observable<any> {
-    return this.http.post(`http://localhost:5000/api/otp/verify`, { email, otp });
+    return this.http.post(environment.apiUrl + '/otp/verify', { email, otp });
   }
 
   // ✅ New method: register for real-time OTP

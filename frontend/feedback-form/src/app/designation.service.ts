@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DesignationService {
-  private baseUrl = 'http://localhost:5000/api/designations'; // Update this if your backend is deployed
+  private baseUrl = environment.apiUrl + '/designations';
 
   constructor(private http: HttpClient) {}
 
