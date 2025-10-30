@@ -52,7 +52,9 @@ exports.requestOtp = async (req, res) => {
       </div>
     `;
 
+    console.log(`Generated OTP for ${email}: ${otp}`);
     await sendEmail(email, emailSubject, emailText, emailHtml);
+    console.log(`OTP email sent successfully to ${email}`);
 
     res.json({
       success: true,

@@ -31,17 +31,22 @@ const sendEmail = async (to, subject, text, html) => {
   console.log('Using email user:', process.env.EMAIL_USER);
   console.log('App password length:', process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 'undefined');
 
-  const mailOptions = {
-    from: `"Beumer Feedback" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    text,
-    html
-  };
+  try {
+    const mailOptions = {
+      from: `"Beumer Feedback" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      text,
+      html
+    };
 
-  const result = await transporter.sendMail(mailOptions);
-  console.log('Email sent successfully:', result.messageId);
-  return result;
+    const result = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', result.messageId);
+    return result;
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    throw error; // Re-throw so the controller can catch it
+  }
 };
 
 module.exports = { sendOtpEmail, sendEmail };
