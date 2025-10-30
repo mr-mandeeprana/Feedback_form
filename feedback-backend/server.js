@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com"],
     methods: ["GET", "POST"]
   }
 });
@@ -49,7 +49,11 @@ io.on('connection', (socket) => {
 app.set('io', io);
 app.set('connectedClients', connectedClients);
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com", "*"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 
 // Root route - must be before API routes
