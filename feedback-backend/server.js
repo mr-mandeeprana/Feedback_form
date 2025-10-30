@@ -14,8 +14,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com"],
-    methods: ["GET", "POST"]
+    origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://beumerfeedbackf.netlify.app", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com"],
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -50,9 +51,10 @@ app.set('io', io);
 app.set('connectedClients', connectedClients);
 
 app.use(cors({
-  origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com", "*"],
+  origin: ["http://localhost:4200", "https://feedback-form-2-5dap.onrender.com", "https://beumerfeedbackf.netlify.app", "https://kind-water-0ed2c0c03.5.azurestaticapps.net", "https://app.netlify.com", "*"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 app.use(express.json());
 
