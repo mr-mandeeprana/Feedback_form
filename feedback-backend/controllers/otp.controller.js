@@ -1,6 +1,6 @@
 const Otp = require('../models/Otp');
 const otpGenerator = require('otp-generator');
-const { sendEmail } = require('../utils/emailService');
+const { sendOtpEmail } = require('../utils/emailService'); // Make sure path is correct
 
 // Generate and send OTP
 exports.requestOtp = async (req, res) => {
@@ -37,23 +37,9 @@ exports.requestOtp = async (req, res) => {
 
     await otpRecord.save();
 
-    // Send OTP via email
-    const emailSubject = 'Your OTP for Feedback Form Verification';
-    const emailText = `Your OTP is: ${otp}. This OTP will expire in 10 minutes.`;
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #333;">Feedback Form Verification</h2>
-        <p>Your OTP for verifying your email is:</p>
-        <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 2px; margin: 20px 0;">
-          ${otp}
-        </div>
-        <p>This OTP will expire in 10 minutes.</p>
-        <p>If you didn't request this OTP, please ignore this email.</p>
-      </div>
-    `;
-
     console.log(`Generated OTP for ${email}: ${otp}`);
-    await sendEmail(email, emailSubject, emailText, emailHtml);
+
+    await sendOtpEmail(email, otp);
     console.log(`OTP email sent successfully to ${email}`);
 
     res.json({
@@ -91,13 +77,6 @@ exports.verifyOtp = async (req, res) => {
       used: false,
       expiresAt: { $gt: new Date() }
     });
-
-    if (!otpRecord) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid or expired OTP'
-      });
-    }
 
     if (!otpRecord) {
       return res.status(400).json({
