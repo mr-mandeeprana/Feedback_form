@@ -1,12 +1,7 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS // Gmail app passwords don't have spaces, but keep as-is
-  }
-});
+// Initialize Resend with API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendOtpEmail(to, otp) {
   console.log('Attempting to send email to:', to);
@@ -28,23 +23,21 @@ async function sendOtpEmail(to, otp) {
 
 const sendEmail = async (to, subject, text, html) => {
   console.log('Attempting to send email to:', to);
-  console.log('Using email user:', process.env.EMAIL_USER);
-  console.log('App password length:', process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 'undefined');
+  console.log('Using Resend API key:', process.env.RESEND_API_KEY ? 'Present' : 'Missing');
 
   try {
-    const mailOptions = {
-      from: `"Beumer Feedback" <${process.env.EMAIL_USER}>`,
+    const result = await resend.emails.send({
+      from: 'Beumer Feedback <onboarding@resend.dev>', // Use Resend's default sender
       to,
       subject,
       text,
       html
-    };
+    });
 
-    const result = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', result.messageId);
+    console.log('Email sent successfully via Resend:', result.data?.id);
     return result;
   } catch (error) {
-    console.error('Email sending failed:', error);
+    console.error('Email sending failed via Resend:', error);
     throw error; // Re-throw so the controller can catch it
   }
 };
