@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api',
-  socketUrl: 'http://localhost:5000'
+  apiUrl: 'https://feedback-form-2-5dap.onrender.com/api',
+  socketUrl: 'https://feedback-form-2-5dap.onrender.com'
 };
