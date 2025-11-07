@@ -403,9 +403,18 @@ onDocCheckboxChange(event: any, documentsArray: string[]) {
 
     const payload = { ...this.formData };
 
+    console.log('Submitting feedback', payload);
+
     this.feedbackService.submitFeedback(payload).subscribe({
-      next: () => this.showSnackBar('✅ Feedback submitted successfully!'),
-      error: () => this.showSnackBar('❌ Failed to submit feedback.')
+      next: () => {
+        console.log('Feedback submitted successfully');
+        this.showSnackBar('✅ Feedback submitted successfully!');
+
+      },
+      error: (error) => {
+        console.log('Failed to submit feedback', error);
+        this.showSnackBar('❌ Failed to submit feedback.')
+      }
     });
 
     this.resetForm(); // 👈 Reset after successful submission
