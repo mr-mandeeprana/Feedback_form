@@ -135,16 +135,6 @@ fillPac: {
 
   cementCompanies: string[] = [];
 
-  otpSent = false;
-  otpVerified = false;
-  otpError = false;
-  enteredOtp = '';
-  userEmail: string = '';
-  otpStatusMessage: string = '';
-  otpStatusType: 'success' | 'error' | '' = '';
-  otpExpirationTime: number = 0;
-  otpCountdown: number = 0;
-  private otpTimer: any;
 
   constructor(
     private feedbackService: FeedbackService,
@@ -159,14 +149,7 @@ fillPac: {
   ngOnInit(): void {
     this.fetchDesignations();
 
-    // Listen for real-time OTP
-    this.feedbackService.onOTPReceived().subscribe((data: any) => {
-      if (data.otp) {
-        this.enteredOtp = data.otp;
-        this.onOtpInputChange(); // Auto-verify
-        console.log('Real-time OTP received and auto-filled:', data.otp);
-      }
-    });
+    // Real-time features can be added here later
   }
 
   fetchDesignations() {
@@ -264,14 +247,6 @@ fillPac: {
     if (!this.formData.designation ||
         (this.formData.designation === 'Other' && !this.otherDesignation.trim())) {
       this.showSnackBar('⚠️ Please select a valid designation or enter your own.');
-      return;
-    }
-    if (!this.otpSent) {
-      this.showSnackBar('⚠️ Please request OTP first.');
-      return;
-    }
-    if (!this.otpVerified) {
-      this.showSnackBar('⚠️ Please verify the OTP before continuing.');
       return;
     }
   }
@@ -413,118 +388,7 @@ onDocCheckboxChange(event: any, documentsArray: string[]) {
     }
   }
 
-  sendOtp() {
-    if (this.otpSent) {
-      return;
-    }
-
-    // Email validation - allow standard email formats
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!this.formData.email || !emailRegex.test(this.formData.email)) {
-      this.showSnackBar('⚠️ Please enter a valid email address.');
-      return;
-    }
-
-    this.otpSent = true; // Disable button immediately to prevent multiple clicks
-    this.clearOtpTimer(); // Clear any existing timer
-
-    this.feedbackService.requestOtp(this.formData.email).subscribe({
-      next: (response: any) => {
-        this.otpSent = true;
-        this.otpVerified = false;
-        this.otpError = false;
-        this.otpStatusMessage = response.message || 'OTP sent successfully!';
-        this.otpStatusType = 'success';
-        this.startOtpCountdown();
-      },
-      error: (error: any) => {
-        this.otpSent = false; // Re-enable button on error
-        this.otpStatusMessage = error.error?.message || 'Failed to send OTP. Try again.';
-        this.otpStatusType = 'error';
-        this.otpCountdown = 0;
-      }
-    });
-  }
-
-  verifyOtp() {
-    // Validate OTP format (6 characters - can be letters, numbers, mixed case)
-    if (!this.enteredOtp || this.enteredOtp.length !== 6) {
-      this.showSnackBar('⚠️ Please enter a valid 6-character OTP.');
-      return;
-    }
-
-    this.feedbackService.verifyOtp(this.formData.email, this.enteredOtp).subscribe({
-      next: (res: any) => {
-        if (res.success) {
-          this.otpVerified = true;
-          this.otpError = false;
-          this.otpStatusMessage = res.message || 'OTP verified successfully!';
-          this.otpStatusType = 'success';
-        } else {
-          this.otpVerified = false;
-          this.otpError = true;
-          this.otpStatusMessage = res.message || 'Invalid OTP. Please try again.';
-          this.otpStatusType = 'error';
-        }
-      },
-      error: (error: any) => {
-        this.otpVerified = false;
-        this.otpError = true;
-        this.otpStatusMessage = error.error?.message || 'Error verifying OTP.';
-        this.otpStatusType = 'error';
-      }
-    });
-  }
-
-  // Allow only numeric input for OTP field
-  allowOnlyNumbersForOtp(event: KeyboardEvent) {
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
-  }
-
-  // Auto-verify OTP when 6 digits entered
-  onOtpInputChange() {
-    if (this.enteredOtp.length === 6) {
-      this.verifyOtp();
-    }
-  }
-
-  // Start OTP countdown timer
-  startOtpCountdown() {
-    this.otpExpirationTime = Date.now() + (5 * 60 * 1000); // 5 minutes from now
-    this.otpCountdown = 5 * 60; // 5 minutes in seconds
-
-    this.otpTimer = setInterval(() => {
-      this.otpCountdown--;
-      if (this.otpCountdown <= 0) {
-        this.clearOtpTimer();
-        this.otpCountdown = 0;
-        // Optionally show expiration message
-        if (!this.otpVerified) {
-          this.otpStatusMessage = 'OTP expired. Please request a new one.';
-          this.otpStatusType = 'error';
-        }
-      }
-      this.cdRef.detectChanges();
-    }, 1000);
-  }
-
-  // Clear OTP timer
-  clearOtpTimer() {
-    if (this.otpTimer) {
-      clearInterval(this.otpTimer);
-      this.otpTimer = null;
-    }
-  }
-
-  // Format countdown as MM:SS
-  getCountdownDisplay(): string {
-    const minutes = Math.floor(this.otpCountdown / 60);
-    const seconds = this.otpCountdown % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
+  // OTP functionality removed
 
   onSubmit() {
     if (this.showOtherDesignation && this.otherDesignation) {
@@ -561,7 +425,7 @@ onDocCheckboxChange(event: any, documentsArray: string[]) {
 }
 
 isFormComplete(): boolean {
-  return this.currentSection === this.maxSections - 1 && this.otpVerified;
+  return this.currentSection === this.maxSections - 1;
 }
 
 saveCementCompany(newCompany: string) {
@@ -640,14 +504,7 @@ submitAnotherResponse() {
     this.showOtherDesignation = false;
     this.showOthercementcompany = false;
     this.cementCompanies = [];
-    this.enteredOtp = '';
-    this.otpSent = false;
-    this.otpVerified = false;
-    this.otpError = false;
-    this.otpStatusMessage = '';
-    this.otpStatusType = '';
-    this.otpCountdown = 0;
-    this.clearOtpTimer();
+    // OTP properties removed, no reset needed
     this.currentSection = 0;
     this.fillPacUnits = Array.from({ length: 10 }, (_, i) => i + 1);
     this.bucketElevatorUnits = Array.from({ length: 10 }, (_, i) => i + 1);

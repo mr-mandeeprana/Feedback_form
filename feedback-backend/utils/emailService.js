@@ -16,22 +16,6 @@ transporter.verify((error, success) => {
   else console.log('SMTP ready');
 });
 
-async function sendOtpEmail(email, otp) {
-  const mailOptions = {
-    from: '"Beumer Feedback" <me.ranamandeep@gmail.com>',
-    to: email,
-    subject: "Your OTP for Beumer Feedback Form",
-    text: `Your OTP is: ${otp}`,
-    html: `<p>Your OTP for the feedback form is: <strong>${otp}</strong></p>`
-  };
-  try {
-    const result = await transporter.sendMail(mailOptions);
-    console.log('Email sent to:', email, 'Result:', result.messageId, result.response);
-    return result;
-  } catch (err) {
-    console.error('Email sending failed:', err);
-    throw err;
-  }
-}
+// OTP functionality removed - email service kept for future use if needed
 
-module.exports = { sendOtpEmail };
+module.exports = {};

@@ -63,23 +63,6 @@
   height: 80px;
 }
 
-.otp-message {
-  margin-top: 5px;
-  font-size: 14px;
-}
-
-.highlight-border {
-  border: 2px solid red;
-  box-shadow: 0 0 10px red;
-}
-
-.otp-success {
-  color: green;
-}
-
-.otp-error {
-  color: red;
-}
 
 ::ng-deep .error-snackbar {
   background-color: #d32f2f; /* red */

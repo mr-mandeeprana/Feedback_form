@@ -8,7 +8,6 @@ require('dotenv').config();
 const designationRoutes = require('./routes/designationRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const cementCompanyRoutes = require('./routes/cementCompany');
-const otpRoutes = require('./routes/otpRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -22,17 +21,11 @@ const io = socketIo(server, {
 
 const PORT = process.env.PORT || 5000;
 
-// Store connected clients by email for real-time OTP
+// Store connected clients by email for real-time features
 const connectedClients = new Map();
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
-
-  // Register client with email for OTP delivery
-  socket.on('register-otp', (email) => {
-    connectedClients.set(email, socket.id);
-    console.log(`Client ${socket.id} registered for OTP: ${email}`);
-  });
 
   socket.on('disconnect', () => {
     // Remove from connected clients
@@ -74,12 +67,9 @@ app.get('/', (req, res) => {
       feedback: '/api/feedback',
       feedbackStats: '/api/feedback/stats',
       cementCompanies: '/api/cement-companies',
-      otp: '/api/otp',
       test: '/test'
     },
-    timestamp: new Date().toISOString(),
-    otp_test_mode: true,
-    note: 'Use OTP 123456 for testing'
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -111,17 +101,6 @@ app.options('/api/feedback', (req, res) => {
 });
 
 app.use('/api/cement-companies', cementCompanyRoutes);
-
-// OTP routes
-app.use('/api/otp', otpRoutes);
-
-// Handle OPTIONS for OTP routes
-app.options('/api/otp', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.status(200).end();
-});
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

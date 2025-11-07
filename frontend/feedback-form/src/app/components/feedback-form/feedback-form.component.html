@@ -68,28 +68,7 @@
     <input type="tel" name="number" [(ngModel)]="formData.number" required pattern="[0-9]{10}" maxlength="10" />
 
     <label class="required">Email ID:</label>
-    <div class="otp-row">
-      <input type="email" name="email" [(ngModel)]="formData.email" required />
-      <button type="button" (click)="sendOtp()" [disabled]="otpSent">Send OTP</button>
-    </div>
-
-    <div *ngIf="otpSent" class="form-group">
-      <label class="required">Enter OTP:</label>
-      <div class="otp-row">
-        <input type="text" [(ngModel)]="enteredOtp" name="otp" maxlength="6" required
-               (input)="onOtpInputChange()" placeholder="Enter 6-character OTP" />
-        <button type="button" (click)="verifyOtp()" [disabled]="otpVerified || enteredOtp.length !== 6">
-          {{ otpVerified ? 'OTP Verified' : 'Verify OTP' }}</button>
-        <div *ngIf="otpCountdown > 0 && !otpVerified" class="countdown">⏱️ Expires in {{ getCountdownDisplay() }}</div>
-        <div *ngIf="otpVerified" class="success">✅ Email verified</div>
-      </div>
-    </div>
-
-    <div *ngIf="otpStatusMessage" [ngClass]="{
-      'otp-success': otpStatusType === 'success',
-      'otp-error': otpStatusType === 'error'}" class="otp-message">
-      {{ otpStatusMessage }}
-    </div>
+    <input type="email" name="email" [(ngModel)]="formData.email" required />
   </div>
 
   <!-- Section C: Product Information -->
